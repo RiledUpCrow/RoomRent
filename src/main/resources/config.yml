@@ -1,0 +1,18 @@
+types:
+  rent_event: rent
+  leave_event: leave
+  show_event: show
+  room_condition: room
+  time_condition: remaining
+  free_condition: free
+time_messages:
+  day: days
+  hour: hours
+  minute: minutes
+  free: For Rent
+
+#example_set:
+#  world: world_nether
+#  rooms:
+#    region1: 100;200;300
+#    region2: 300;200;200

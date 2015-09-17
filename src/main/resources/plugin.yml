@@ -1,0 +1,15 @@
+name: RoomRent
+main: pl.betoncraft.roomrent.RoomRent
+description: Lets you rent a WorldGuard room using BetonQuest conversations
+authors: [Co0sh]
+depend: [WorldEdit, WorldGuard, BetonQuest]
+softdepend: [Citizens]
+version: 1.0
+commands:
+  room:
+    description: Lets you easily add rooms to sets. You have to look at the sign.
+    usage: /<command> set region
+    permission: rentroom.add
+permissions:
+  rentroom.add:
+    default: op
