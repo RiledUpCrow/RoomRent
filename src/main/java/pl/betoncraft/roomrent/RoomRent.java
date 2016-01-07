@@ -57,6 +57,8 @@ public class RoomRent extends JavaPlugin {
 				.getString("types.time_condition"), TimeCondition.class);
 		BetonQuest.getInstance().registerConditions(getConfig()
 				.getString("types.free_condition"), FreeCondition.class);
+		BetonQuest.getInstance().registerVariable(getConfig()
+				.getString("types.room_variable"), RoomVariable.class);
 		// if Citizens is enabled, register 'show' event
 		if (Bukkit.getPluginManager().isPluginEnabled("Citizens")) {
 			BetonQuest.getInstance().registerEvents(getConfig()

@@ -17,6 +17,7 @@
  */
 package pl.betoncraft.roomrent;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.logging.Logger;
@@ -184,6 +185,13 @@ public class RoomSet {
 	 */
 	public String getName() {
 		return name;
+	}
+	
+	/**
+	 * @return the rooms in this set
+	 */
+	public Collection<SingleRoom> getRooms() {
+		return rooms.values();
 	}
 
 }

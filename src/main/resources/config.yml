@@ -5,12 +5,13 @@ types:
   room_condition: room
   time_condition: remaining
   free_condition: free
+  room_variable: room
 time_messages:
   day: days
   hour: hours
   minute: minutes
   free: For Rent
-
+  and: and
 #example_set:
 #  world: world_nether
 #  rooms:
