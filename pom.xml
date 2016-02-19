@@ -58,12 +58,13 @@
 			<groupId>net.citizensnpcs</groupId>
 			<artifactId>citizensapi</artifactId>
 			<version>2.0.12-SNAPSHOT</version>
-			<scope>provided</scope>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/Citizens.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>pl.betoncraft.betonquest</groupId>
 			<artifactId>betonquest</artifactId>
-			<version>1.7.5</version>
+			<version>1.8.2</version>
 			<scope>system</scope>
 			<systemPath>${project.basedir}/lib/BetonQuest.jar</systemPath>
 		</dependency>
