@@ -68,6 +68,21 @@ name of the set.
 * `remaining inn 10080` - checks if the remaining time of the room rented
   in "inn" set is greater than a week
 
+## Conversation variables
+
+BetonQuest 1.8 introduces variable system for conversations. RoomRent adds `room`
+variable, which allows for displaying information about rooms. The first argument
+(right after `room` keyword) is a name of the set you want to reference. Second one
+specifies what the variable will display: `total` is a total amount of rooms in the
+set, `free` is amount of free rooms, `full` is amount of taken rooms, `left` is
+a nicely formatted amount of time left and `date` is an exact date when the room
+will expire.
+
+**Examples:**
+
+* `%room.inn.total%` - displays total amount of rooms in the "inn" set, free and taken
+* `%room.another_inn.left%` - displays how much time is left before the player's room expires
+
 ## Configuration of regions
 
 WorldGuard regions must be configured correctly so the rooms can work as

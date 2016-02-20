@@ -3,6 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>pl.betoncraft.roomrent</groupId>
 	<artifactId>RoomRent</artifactId>
+	<version>1.1</version>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
@@ -83,5 +84,4 @@
 			<systemPath>${project.basedir}/lib/WorldEdit.jar</systemPath>
 		</dependency>
 	</dependencies>
-	<version>1.0</version>
 </project>
