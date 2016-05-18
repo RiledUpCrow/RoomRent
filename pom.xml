@@ -8,7 +8,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<build>
-		<finalName>${artifactId}</finalName>
+		<finalName>${project.artifactId}</finalName>
 		<resources>
 			<resource>
 				<directory>${basedir}</directory>
@@ -44,44 +44,36 @@
 			<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots</url>
 		</repository>
 		<repository>
-			<id>citizens-repo</id>
-			<url>http://repo.citizensnpcs.co/</url>
+			<id>betonquest-repo</id>
+			<url>http://betonquest.betoncraft.pl/mvn</url>
 		</repository>
 	</repositories>
 	<dependencies>
 		<dependency>
-			<groupId>org.bukkit</groupId>
-			<artifactId>bukkit</artifactId>
-			<version>1.8.7-R0.1-SNAPSHOT</version>
+			<groupId>org.spigotmc</groupId>
+			<artifactId>spigot-api</artifactId>
+			<version>1.9.4-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>net.citizensnpcs</groupId>
 			<artifactId>citizensapi</artifactId>
 			<version>2.0.12-SNAPSHOT</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/lib/Citizens.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>pl.betoncraft.betonquest</groupId>
 			<artifactId>betonquest</artifactId>
-			<version>1.8.2</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/lib/BetonQuest.jar</systemPath>
+			<version>1.8.5</version>
 		</dependency>
 		<dependency>
-			<groupId>com.sk89q</groupId>
+			<groupId>com.sk89q.worldguard</groupId>
 			<artifactId>worldguard</artifactId>
 			<version>6.1</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/lib/WorldGuard.jar</systemPath>
 		</dependency>
 		<dependency>
-			<groupId>com.sk89q</groupId>
+			<groupId>com.sk89q.worldedit</groupId>
 			<artifactId>worldedit</artifactId>
 			<version>6.1</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/lib/WorldEdit.jar</systemPath>
 		</dependency>
 	</dependencies>
 </project>
