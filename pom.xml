@@ -62,7 +62,7 @@
 		</dependency>
 		<dependency>
 			<groupId>pl.betoncraft.betonquest</groupId>
-			<artifactId>betonquest</artifactId>
+			<artifactId>BetonQuest</artifactId>
 			<version>1.8.5</version>
 		</dependency>
 		<dependency>
