@@ -42,11 +42,14 @@ Each room has a sign, which shows who is currenty renting it and for how long.
 If the room is free, the sign will show a message "For Rent". Of course these
 messages are all customizable in the config.
 
-Adding regions to sets is done with `/room add <set> <region>` command.
-You have to look at the sign while issuing this command, so the plugin can
-associate it with the region. You don't have to "create" sets. Just add a 
+Adding regions to sets is done with `/room add <set> <region> [regen]`
+command. You have to look at the sign while issuing this command, so the plugin
+can associate it with the region. You don't have to "create" sets. Just add a 
 region to them, they will be automatically created for you. All regions and
-signs in a set must be on the same world.
+signs in a set must be on the same world. The last argument is optional, add it
+if you want the room to automatically regenerate after the rent is over. To
+disable this regeneration simply delete the file _RoomRent/world/regionName_
+and reload the plugin.
 
 A player can have only one room in each set, but it's up to you to disable
 having rooms in different sets if you want that. Just use conditions. The

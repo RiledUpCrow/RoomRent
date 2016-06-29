@@ -17,6 +17,8 @@
  */
 package pl.betoncraft.roomrent;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.UUID;
 
@@ -29,6 +31,14 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import com.sk89q.worldedit.CuboidClipboard;
+import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.MaxChangedBlocksException;
+import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.bukkit.BukkitWorld;
+import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+import com.sk89q.worldedit.data.DataException;
+import com.sk89q.worldedit.schematic.SchematicFormat;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
@@ -37,6 +47,7 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
  * 
  * @author Jakub Sapalski
  */
+@SuppressWarnings("deprecation")
 public class SingleRoom {
 
 	private RoomRent plugin;
@@ -45,6 +56,8 @@ public class SingleRoom {
 	private Sign sign;
 	private OfflinePlayer renter;
 	private long time;
+	private File schematicFile;
+	private SchematicFormat schematic;
 
 	/**
 	 * Creates a room with specified region and sign location.
@@ -68,6 +81,10 @@ public class SingleRoom {
 		renter = (rawRenter == null) ? null : Bukkit.getOfflinePlayer(UUID.fromString(rawRenter));
 		String rawTime = config.getString(world.getName() + "." + regionName + ".time");
 		time = (rawTime == null) ? -1 : Long.parseLong(rawTime);
+		schematicFile = new File(plugin.getDataFolder(), sign.getWorld().getName() + File.separator + regionName);
+		if (schematicFile.exists()) {
+			schematic = SchematicFormat.getFormat(schematicFile);
+		}
 	}
 
 	public boolean isFree() {
@@ -123,6 +140,26 @@ public class SingleRoom {
 		region.getMembers().getPlayerDomain().removePlayer(renter.getUniqueId());
 		time = -1;
 		renter = null;
+		if (schematic != null) {
+			regenerate();
+		}
+	}
+
+	/**
+	 * Pastes a schematic into the room.
+	 */
+	private void regenerate() {
+		try {
+			Location location = sign.getLocation();
+			CuboidClipboard clipboard = schematic.load(schematicFile);
+			BukkitWorld world = new BukkitWorld(location.getWorld());
+			WorldEditPlugin we = (WorldEditPlugin) Bukkit.getPluginManager().getPlugin("WorldEdit");
+			EditSession editSession = we.getWorldEdit().getEditSessionFactory().getEditSession(world, 64*64*64);
+			Vector newOrigin = region.getMinimumPoint();
+			clipboard.paste(editSession, newOrigin, false);
+		} catch (DataException | MaxChangedBlocksException | IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**

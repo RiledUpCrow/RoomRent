@@ -17,9 +17,12 @@
  */
 package pl.betoncraft.roomrent;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
@@ -27,13 +30,22 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.sk89q.worldedit.CuboidClipboard;
+import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.bukkit.BukkitWorld;
+import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+import com.sk89q.worldedit.regions.CuboidRegion;
+import com.sk89q.worldedit.world.DataException;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 /**
  * The main command used to create rooms.
  * 
  * @author Jakub Sapalski
  */
+@SuppressWarnings("deprecation")
 public class RoomCommand implements CommandExecutor {
 
 	private final RoomRent plugin;
@@ -57,13 +69,14 @@ public class RoomCommand implements CommandExecutor {
 			if (args[0].equalsIgnoreCase("add")) {
 				if (sender instanceof Player) {
 					// set and region name must be provided
-					if (args.length != 3) {
-						sender.sendMessage("§cIncorrect amount of arguments: " + "/roomrent add <set> <region>");
+					if (args.length < 3) {
+						sender.sendMessage("§cIncorrect amount of arguments: " + "/roomrent add <set> <region> [regen]");
 						return true;
 					}
 					Player player = ((Player) sender);
 					// region must exist
-					if (WorldGuardPlugin.inst().getRegionManager(player.getWorld()).getRegion(args[2]) == null) {
+					ProtectedRegion region = WorldGuardPlugin.inst().getRegionManager(player.getWorld()).getRegion(args[2]);
+					if (region == null) {
 						sender.sendMessage("§cThis region does not exist!");
 						return true;
 					}
@@ -88,6 +101,22 @@ public class RoomCommand implements CommandExecutor {
 							target.getLocation().getBlockX() + ";" + target.getLocation().getBlockY() + ";"
 							+ target.getLocation().getBlockZ());
 					plugin.saveConfig();
+					// if there is "regen" argument, add a schematic
+					if (args.length > 3 && args[3].equalsIgnoreCase("regen")) {
+						try {
+							WorldEditPlugin we = (WorldEditPlugin) Bukkit.getPluginManager().getPlugin("WorldEdit");
+							Vector size = region.getMaximumPoint().subtract(region.getMinimumPoint());
+							CuboidClipboard clipboard = new CuboidClipboard(size, region.getMinimumPoint());
+							EditSession editSession = we.getWorldEdit().getEditSessionFactory().getEditSession(new BukkitWorld(Bukkit.getWorld(world)), 64*64*64);
+							CuboidRegion r = new CuboidRegion(region.getMinimumPoint(), region.getMaximumPoint());
+							clipboard.copy(editSession, r);
+							File worldDirectory = new File(plugin.getDataFolder(), world);
+							worldDirectory.mkdir();
+							clipboard.saveSchematic(new File(worldDirectory, args[2]));
+						} catch (IOException | DataException e) {
+							e.printStackTrace();
+						}
+					}
 					sender.sendMessage("§2Region successfully added!");
 					return true;
 				}

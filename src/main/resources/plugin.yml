@@ -4,7 +4,7 @@ description: Lets you rent a WorldGuard room using BetonQuest conversations
 authors: [Co0sh]
 depend: [WorldEdit, WorldGuard, BetonQuest]
 softdepend: [Citizens]
-version: 1.1
+version: 1.2
 commands:
   room:
     description: Lets you easily add rooms to sets. You have to look at the sign.
