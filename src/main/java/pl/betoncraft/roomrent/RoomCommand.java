@@ -35,7 +35,7 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
  * @author Jakub Sapalski
  */
 public class RoomCommand implements CommandExecutor {
-	
+
 	private final RoomRent plugin;
 
 	public RoomCommand(RoomRent plugin) {
@@ -44,8 +44,7 @@ public class RoomCommand implements CommandExecutor {
 	}
 
 	@Override
-	public boolean onCommand(CommandSender sender, Command cmd, String label,
-			String[] args) {
+	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (cmd.getName().equalsIgnoreCase("room")) {
 			if (args.length == 0) {
 				showHelp(sender, label);
@@ -59,15 +58,12 @@ public class RoomCommand implements CommandExecutor {
 				if (sender instanceof Player) {
 					// set and region name must be provided
 					if (args.length != 3) {
-						sender.sendMessage("§cIncorrect amount of arguments: "
-								+ "/roomrent add <set> <region>");
+						sender.sendMessage("§cIncorrect amount of arguments: " + "/roomrent add <set> <region>");
 						return true;
 					}
 					Player player = ((Player) sender);
 					// region must exist
-					if (WorldGuardPlugin.inst().getRegionManager(
-							player.getWorld())
-							.getRegion(args[2]) == null) {
+					if (WorldGuardPlugin.inst().getRegionManager(player.getWorld()).getRegion(args[2]) == null) {
 						sender.sendMessage("§cThis region does not exist!");
 						return true;
 					}
@@ -75,34 +71,28 @@ public class RoomCommand implements CommandExecutor {
 					Set<Material> transparent = new HashSet<Material>();
 					transparent.add(Material.AIR);
 					Block target = player.getTargetBlock(transparent, 15);
-					if (target.getType() != Material.SIGN_POST &&
-							target.getType() != Material.WALL_SIGN) {
+					if (target.getType() != Material.SIGN_POST && target.getType() != Material.WALL_SIGN) {
 						sender.sendMessage("§cYou have to look at the sign!");
 						return true;
 					}
 					// check if the world does not conflict with configuration
-					String world = plugin.getConfig()
-							.getString("room_sets." + args[1] + ".world");
+					String world = plugin.getConfig().getString("room_sets." + args[1] + ".world");
 					if (world == null) {
-						plugin.getConfig().set("room_sets." + args[1] +
-								".world", player.getWorld().getName());
-					} else if (!world.equals(target.getWorld().getName())){
+						plugin.getConfig().set("room_sets." + args[1] + ".world", player.getWorld().getName());
+					} else if (!world.equals(target.getWorld().getName())) {
 						sender.sendMessage("§3This set is on another world!");
 						return true;
 					}
 					// adding region to the config
-					plugin.getConfig().set("room_sets." + args[1] + ".rooms." +
-							args[2],
-							target.getLocation().getBlockX() + ";" +
-							target.getLocation().getBlockY() + ";" +
-							target.getLocation().getBlockZ());
+					plugin.getConfig().set("room_sets." + args[1] + ".rooms." + args[2],
+							target.getLocation().getBlockX() + ";" + target.getLocation().getBlockY() + ";"
+							+ target.getLocation().getBlockZ());
 					plugin.saveConfig();
 					sender.sendMessage("§2Region successfully added!");
 					return true;
 				}
 				// the console cannot add rooms
-				sender.sendMessage("Please edit the files manually and "
-						+ "use /roomrent reload");
+				sender.sendMessage("Please edit the files manually and " + "use /roomrent reload");
 				return true;
 			}
 			showHelp(sender, label);
@@ -115,13 +105,12 @@ public class RoomCommand implements CommandExecutor {
 	 * Shows the help to the player.
 	 */
 	private void showHelp(CommandSender sender, String label) {
-		sender.sendMessage("§eTo add the room to a set use a command '§b/"
-				+ label + " add <set> <region>§e', where §b<set>§e is a name"
+		sender.sendMessage("§eTo add the room to a set use a command '§b/" + label
+				+ " add <set> <region>§e', where §b<set>§e is a name"
 				+ " of a set and §b<region>§e is a name of the WorldGuard"
-				+ " region. You have to look at the sign, which will become "
-				+ "an information board for the room.");
-		sender.sendMessage("§eIf you want to reload the saved configuration,"
-				+ " use '§b/" + label + " reload§e' command.");
+				+ " region. You have to look at the sign, which will become " + "an information board for the room.");
+		sender.sendMessage(
+				"§eIf you want to reload the saved configuration," + " use '§b/" + label + " reload§e' command.");
 	}
 
 }

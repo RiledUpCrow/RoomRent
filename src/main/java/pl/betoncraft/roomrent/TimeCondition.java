@@ -27,12 +27,11 @@ import pl.betoncraft.betonquest.utils.PlayerConverter;
  * @author Jakub Sapalski
  */
 public class TimeCondition extends Condition {
-	
+
 	private RoomSet set;
 	private long time;
 
-	public TimeCondition(String packName, String instruction)
-			throws InstructionParseException {
+	public TimeCondition(String packName, String instruction) throws InstructionParseException {
 		super(packName, instruction);
 		String[] parts = instruction.split(" ");
 		if (parts.length < 3) {
@@ -40,8 +39,7 @@ public class TimeCondition extends Condition {
 		}
 		set = RoomRent.getPlugin(RoomRent.class).getRoomSets().get(parts[1]);
 		if (set == null) {
-			throw new InstructionParseException(
-					"There is no such set as '" + parts[1] + "'");
+			throw new InstructionParseException("There is no such set as '" + parts[1] + "'");
 		}
 		try {
 			time = Long.parseLong(parts[2]) * 1000 * 60;

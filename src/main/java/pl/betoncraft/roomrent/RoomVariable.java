@@ -32,23 +32,21 @@ import pl.betoncraft.betonquest.utils.PlayerConverter;
  * @author Jakub Sapalski
  */
 public class RoomVariable extends Variable {
-	
+
 	private RoomSet set;
 	private Type type;
 	private RoomRent plugin;
 
-	public RoomVariable(String packName, String instruction)
-			throws InstructionParseException {
+	public RoomVariable(String packName, String instruction) throws InstructionParseException {
 		super(packName, instruction);
-        String[] parts = instruction.replace("%", "").split("\\.");
-        if (parts.length != 3) {
-            throw new InstructionParseException("Incorrect number of arguments");
-        }
-        plugin = RoomRent.getPlugin(RoomRent.class);
+		String[] parts = instruction.replace("%", "").split("\\.");
+		if (parts.length != 3) {
+			throw new InstructionParseException("Incorrect number of arguments");
+		}
+		plugin = RoomRent.getPlugin(RoomRent.class);
 		set = plugin.getRoomSets().get(parts[1]);
 		if (set == null) {
-			throw new InstructionParseException(
-					"There is no such set as '" + parts[1] + "'");
+			throw new InstructionParseException("There is no such set as '" + parts[1] + "'");
 		}
 		switch (parts[2].toLowerCase()) {
 		case "total":
@@ -91,57 +89,60 @@ public class RoomVariable extends Variable {
 			}
 			return Integer.toString(full);
 		case TIME_LEFT:
-			String lang = BetonQuest.getInstance().getDBHandler(playerID)
-					.getLanguage();
+			String lang = BetonQuest.getInstance().getDBHandler(playerID).getLanguage();
 			String daysWord = Config.getMessage(lang, "days");
-            String hoursWord = Config.getMessage(lang, "hours");
-            String minutesWord = Config.getMessage(lang, "minutes");
-            String secondsWord = Config.getMessage(lang, "seconds");
-            long timeLeft = set.getTimeLeft(PlayerConverter.getPlayer(playerID));
-            long s = (timeLeft / (1000)) % 60;
-            long m = (timeLeft / (1000 * 60)) % 60;
-            long h = (timeLeft / (1000 * 60 * 60)) % 24;
-            long d = (timeLeft / (1000 * 60 * 60 * 24));
-            StringBuilder time = new StringBuilder();
-            String[] words = new String[3];
-            if (d > 0) words[0] = d + " " + daysWord;
-            if (h > 0) words[1] = h + " " + hoursWord;
-            if (m > 0) words[2] = m + " " + minutesWord;
-            int count = 0;
-            for (String word : words) {
-                if (word != null) count++;
-            }
-            if (count == 0) {
-                time.append(s + " " + secondsWord);
-            } else if (count == 1) {
-                for (String word : words) {
-                    if (word == null) continue;
-                    time.append(word);
-                }
-            } else if (count == 2) {
-                boolean second = false;
-                for (String word : words) {
-                    if (word == null) continue;
-                    if (second) {
-                        time.append(" " + word);
-                    } else {
-                        time.append(word + " " + Config.getMessage(lang, "and"));
-                        second = true;
-                    }
-                }
-            } else {
-                time.append(words[0] + ", " + words[1] + " "
-                		+ Config.getMessage(lang, "and ") + words[2]);
-            }
-            return time.toString();
+			String hoursWord = Config.getMessage(lang, "hours");
+			String minutesWord = Config.getMessage(lang, "minutes");
+			String secondsWord = Config.getMessage(lang, "seconds");
+			long timeLeft = set.getTimeLeft(PlayerConverter.getPlayer(playerID));
+			long s = (timeLeft / (1000)) % 60;
+			long m = (timeLeft / (1000 * 60)) % 60;
+			long h = (timeLeft / (1000 * 60 * 60)) % 24;
+			long d = (timeLeft / (1000 * 60 * 60 * 24));
+			StringBuilder time = new StringBuilder();
+			String[] words = new String[3];
+			if (d > 0)
+				words[0] = d + " " + daysWord;
+			if (h > 0)
+				words[1] = h + " " + hoursWord;
+			if (m > 0)
+				words[2] = m + " " + minutesWord;
+			int count = 0;
+			for (String word : words) {
+				if (word != null)
+					count++;
+			}
+			if (count == 0) {
+				time.append(s + " " + secondsWord);
+			} else if (count == 1) {
+				for (String word : words) {
+					if (word == null)
+						continue;
+					time.append(word);
+				}
+			} else if (count == 2) {
+				boolean second = false;
+				for (String word : words) {
+					if (word == null)
+						continue;
+					if (second) {
+						time.append(" " + word);
+					} else {
+						time.append(word + " " + Config.getMessage(lang, "and"));
+						second = true;
+					}
+				}
+			} else {
+				time.append(words[0] + ", " + words[1] + " " + Config.getMessage(lang, "and ") + words[2]);
+			}
+			return time.toString();
 		case ENDING_DATE:
-            return new SimpleDateFormat(Config.getString("config.date_format"))
-            		.format(set.getTimeLeft(PlayerConverter.getPlayer(playerID))
-            		+ new Date().getTime());
+			return new SimpleDateFormat(Config.getString("config.date_format"))
+					.format(set.getTimeLeft(PlayerConverter.getPlayer(playerID)) + new Date().getTime());
 		}
 		return "";
 	}
-	
+
 	private enum Type {
 		TOTAL_ROOMS, FREE_ROOMS, FULL_ROOMS, TIME_LEFT, ENDING_DATE
 	}

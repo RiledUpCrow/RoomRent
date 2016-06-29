@@ -43,14 +43,14 @@ public class Database {
 		}
 		data = YamlConfiguration.loadConfiguration(file);
 	}
-	
+
 	/**
 	 * @return the FileConfiguration object containing the database
 	 */
 	public FileConfiguration getConfig() {
 		return data;
 	}
-	
+
 	/**
 	 * Saves the database to the file.
 	 */

@@ -23,14 +23,14 @@ package pl.betoncraft.roomrent;
  * @author Jakub Sapalski
  */
 public class RoomException extends Exception {
-	
+
 	private static final long serialVersionUID = 2740018724169639227L;
 	private String message;
-	
+
 	public RoomException(String message) {
 		this.message = message;
 	}
-	
+
 	@Override
 	public String getMessage() {
 		return message;

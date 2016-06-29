@@ -27,11 +27,10 @@ import pl.betoncraft.betonquest.utils.PlayerConverter;
  * @author Jakub Sapalski
  */
 public class LeaveEvent extends QuestEvent {
-	
+
 	private RoomSet set;
 
-	public LeaveEvent(String packName, String instruction)
-			throws InstructionParseException {
+	public LeaveEvent(String packName, String instruction) throws InstructionParseException {
 		super(packName, instruction);
 		String[] parts = instruction.split(" ");
 		if (parts.length < 2) {
@@ -39,8 +38,7 @@ public class LeaveEvent extends QuestEvent {
 		}
 		set = RoomRent.getPlugin(RoomRent.class).getRoomSets().get(parts[1]);
 		if (set == null) {
-			throw new InstructionParseException(
-					"There is no such set as '" + parts[1] + "'");
+			throw new InstructionParseException("There is no such set as '" + parts[1] + "'");
 		}
 	}
 

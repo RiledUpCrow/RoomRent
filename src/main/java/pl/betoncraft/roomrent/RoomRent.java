@@ -32,7 +32,7 @@ import pl.betoncraft.betonquest.BetonQuest;
  * @author Jakub Sapalski
  */
 public class RoomRent extends JavaPlugin {
-	
+
 	private HashMap<String, RoomSet> roomSets = new HashMap<>();
 	private Database database;
 
@@ -47,34 +47,28 @@ public class RoomRent extends JavaPlugin {
 		// register a command
 		new RoomCommand(this);
 		// register BetonQuest events and conditions
-		BetonQuest.getInstance().registerEvents(getConfig()
-				.getString("types.rent_event"), RentEvent.class);
-		BetonQuest.getInstance().registerEvents(getConfig()
-				.getString("types.leave_event"), LeaveEvent.class);
-		BetonQuest.getInstance().registerConditions(getConfig()
-				.getString("types.room_condition"), RoomCondition.class);
-		BetonQuest.getInstance().registerConditions(getConfig()
-				.getString("types.time_condition"), TimeCondition.class);
-		BetonQuest.getInstance().registerConditions(getConfig()
-				.getString("types.free_condition"), FreeCondition.class);
-		BetonQuest.getInstance().registerVariable(getConfig()
-				.getString("types.room_variable"), RoomVariable.class);
+		BetonQuest.getInstance().registerEvents(getConfig().getString("types.rent_event"), RentEvent.class);
+		BetonQuest.getInstance().registerEvents(getConfig().getString("types.leave_event"), LeaveEvent.class);
+		BetonQuest.getInstance().registerConditions(getConfig().getString("types.room_condition"), RoomCondition.class);
+		BetonQuest.getInstance().registerConditions(getConfig().getString("types.time_condition"), TimeCondition.class);
+		BetonQuest.getInstance().registerConditions(getConfig().getString("types.free_condition"), FreeCondition.class);
+		BetonQuest.getInstance().registerVariable(getConfig().getString("types.room_variable"), RoomVariable.class);
 		// if Citizens is enabled, register 'show' event
 		if (Bukkit.getPluginManager().isPluginEnabled("Citizens")) {
-			BetonQuest.getInstance().registerEvents(getConfig()
-				.getString("types.show_event"), ShowEvent.class);
+			BetonQuest.getInstance().registerEvents(getConfig().getString("types.show_event"), ShowEvent.class);
 		}
-		//start metrics
+		// start metrics
 		try {
 			new Metrics(this).start();
-		} catch (IOException e) {}
+		} catch (IOException e) {
+		}
 	}
-	
+
 	@Override
 	public void onDisable() {
 		database.save();
 	}
-	
+
 	/**
 	 * Reloads the plugin.
 	 */
@@ -83,7 +77,7 @@ public class RoomRent extends JavaPlugin {
 		reloadConfig();
 		load();
 	}
-	
+
 	/**
 	 * @return the database object
 	 */
@@ -105,9 +99,10 @@ public class RoomRent extends JavaPlugin {
 		database = new Database(this);
 		roomSets.clear();
 		ConfigurationSection config = getConfig().getConfigurationSection("room_sets");
-		if (config != null) for (String key : config.getKeys(false)) {
-			roomSets.put(key, new RoomSet(this, key));
-		}
+		if (config != null)
+			for (String key : config.getKeys(false)) {
+				roomSets.put(key, new RoomSet(this, key));
+			}
 	}
 
 }

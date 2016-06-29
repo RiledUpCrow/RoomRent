@@ -20,24 +20,24 @@ package pl.betoncraft.roomrent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**
- * Updates rooms, removing the renters, changing the text
- * on signs and saves the data.
+ * Updates rooms, removing the renters, changing the text on signs and saves the
+ * data.
  * 
  * @author Jakub Sapalski
  */
 public class RoomUpdater extends BukkitRunnable {
-	
+
 	private RoomRent plugin;
-	
+
 	/**
 	 * Starts the room updater
 	 * 
 	 * @param plugin
-	 * 				main plugin instance
+	 *            main plugin instance
 	 */
 	public RoomUpdater(RoomRent plugin) {
 		this.plugin = plugin;
-		runTaskTimer(plugin, 0, 20*60);
+		runTaskTimer(plugin, 0, 20 * 60);
 	}
 
 	@Override

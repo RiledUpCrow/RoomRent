@@ -39,49 +39,45 @@ public class RoomSet {
 	private HashMap<String, SingleRoom> rooms = new HashMap<>();
 
 	/**
-	 * Loads from the configuration a room set with given name. 
+	 * Loads from the configuration a room set with given name.
 	 * 
 	 * @param plugin
-	 * 				main plugin instance
+	 *            main plugin instance
 	 * @param name
-	 * 				name of the set
+	 *            name of the set
 	 */
 	public RoomSet(RoomRent plugin, String name) {
 		this.name = name;
-		world = Bukkit.getWorld(plugin.getConfig().getString(
-				"room_sets." + name + ".world"));
-		for (String key : plugin.getConfig()
-				.getConfigurationSection("room_sets." + name + ".rooms")
-				.getKeys(false)) {
+		world = Bukkit.getWorld(plugin.getConfig().getString("room_sets." + name + ".world"));
+		for (String key : plugin.getConfig().getConfigurationSection("room_sets." + name + ".rooms").getKeys(false)) {
 			try {
-				String loc = plugin.getConfig()
-						.getString("room_sets." + name + ".rooms." + key);
+				String loc = plugin.getConfig().getString("room_sets." + name + ".rooms." + key);
 				rooms.put(key, new SingleRoom(plugin, world, key, loc));
 			} catch (RoomException e) {
 				plugin.getLogger().severe(e.getMessage());
 			}
 		}
-		plugin.getLogger().info("Loaded " + rooms.size() + " rooms in '"
-				+ name + "' set.");
+		plugin.getLogger().info("Loaded " + rooms.size() + " rooms in '" + name + "' set.");
 	}
-	
+
 	/**
 	 * @return true if this set contains at leas one free room
 	 */
 	public boolean hasRoom() {
 		for (SingleRoom room : rooms.values()) {
-			if (room.isFree()) return true;
+			if (room.isFree())
+				return true;
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Rents a first available room for the player or adds time to existing one.
 	 * 
 	 * @param player
-	 * 				the renter of the room
+	 *            the renter of the room
 	 * @param time
-	 * 				duration of the renting
+	 *            duration of the renting
 	 */
 	public void rentRoom(OfflinePlayer player, long time) {
 		// first check if the player has a room in this set, and if so
@@ -100,50 +96,47 @@ public class RoomSet {
 			}
 		}
 		// if there is no free room, make a note in the console
-		Logger.getLogger("RoomRent").warning(
-				"There are no more free rooms in the '" + name + "' set for "
-				+ player.getName()
-				+ ". You should use a condition to check for that"
-				+ " and block renting a room.");
+		Logger.getLogger("RoomRent").warning("There are no more free rooms in the '" + name + "' set for "
+				+ player.getName() + ". You should use a condition to check for that" + " and block renting a room.");
 	}
-	
+
 	/**
 	 * Checks if the set has a room rented by this player.
 	 * 
 	 * @param player
-	 * 				player to check
+	 *            player to check
 	 * @return true if the player has a room in this set
 	 */
 	public boolean containsRenter(OfflinePlayer player) {
 		for (SingleRoom room : rooms.values()) {
-			if (room.getRenter() != null && room.getRenter().equals(player)){
+			if (room.getRenter() != null && room.getRenter().equals(player)) {
 				return true;
 			}
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Returns the location of the sign of the player's room.
 	 * 
 	 * @param player
-	 * 				the renter of the room
+	 *            the renter of the room
 	 * @return the location of the sign or null if the player is not a renter
 	 */
 	public Location getLocation(OfflinePlayer player) {
 		for (SingleRoom room : rooms.values()) {
-			if (room.getRenter() != null && room.getRenter().equals(player)){
+			if (room.getRenter() != null && room.getRenter().equals(player)) {
 				return room.getSign().getLocation();
 			}
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Calculates time left to termination of the rent.
 	 * 
 	 * @param player
-	 * 				player to check
+	 *            player to check
 	 * @return -1 if the player does not have a room or time to termination
 	 */
 	public long getTimeLeft(OfflinePlayer player) {
@@ -154,12 +147,12 @@ public class RoomSet {
 		}
 		return -1;
 	}
-	
+
 	/**
 	 * Removes a renter from this set.
 	 * 
 	 * @param player
-	 * 				player to remove
+	 *            player to remove
 	 */
 	public void removeRenter(OfflinePlayer player) {
 		for (SingleRoom room : rooms.values()) {
@@ -170,7 +163,7 @@ public class RoomSet {
 			}
 		}
 	}
-	
+
 	/**
 	 * @return updates all rooms in this set
 	 */
@@ -186,7 +179,7 @@ public class RoomSet {
 	public String getName() {
 		return name;
 	}
-	
+
 	/**
 	 * @return the rooms in this set
 	 */

@@ -40,49 +40,46 @@ import pl.betoncraft.betonquest.config.Config;
  * @author Jakub Sapalski
  */
 public class ShowingHandler implements Listener {
-	
+
 	private String endText;
 	private Player player;
 	private Location loc;
 	private final NPC npc;
 	private ArrayList<String> variables = new ArrayList<>();
 
-	public ShowingHandler(Player player, Location loc, int npcId,
-			String startText, String endText) {
-        for (String variable : BetonQuest.resolveVariables(startText + endText)) {
-            BetonQuest.createVariable(Config.getPackage("default"), variable);
-            if (!variables.contains(variable)) variables.add(variable);
-        }
+	public ShowingHandler(Player player, Location loc, int npcId, String startText, String endText) {
+		for (String variable : BetonQuest.resolveVariables(startText + endText)) {
+			BetonQuest.createVariable(Config.getPackage("default"), variable);
+			if (!variables.contains(variable))
+				variables.add(variable);
+		}
 		this.endText = endText;
 		this.player = player;
 		this.loc = loc;
 		this.npc = CitizensAPI.getNPCRegistry().getById(npcId);
 		if (npc == null) {
-			BetonQuest.getInstance().getLogger().warning("NPC with ID "
-					+ npcId + " does not exist");
+			BetonQuest.getInstance().getLogger().warning("NPC with ID " + npcId + " does not exist");
 			return;
 		}
 		if (!npc.getNavigator().isNavigating()) {
-			Bukkit.getPluginManager().registerEvents(this,
-					RoomRent.getPlugin(RoomRent.class));
-	        for (String variable : variables) {
-	        	startText = startText.replace(variable, BetonQuest.getInstance()
-	                    .getVariableValue("default", variable, player.getUniqueId()
-	                    .toString()));
-	        }
+			Bukkit.getPluginManager().registerEvents(this, RoomRent.getPlugin(RoomRent.class));
+			for (String variable : variables) {
+				startText = startText.replace(variable, BetonQuest.getInstance().getVariableValue("default", variable,
+						player.getUniqueId().toString()));
+			}
 			player.sendMessage(startText);
 			npc.getNavigator().setTarget(loc);
 		}
 	}
-	
+
 	@EventHandler
 	public void onNavigationEnd(final NavigationCompleteEvent e) {
-		if (!e.getNPC().equals(npc)) return;
-        for (String variable : variables) {
-        	endText = endText.replace(variable, BetonQuest.getInstance()
-                    .getVariableValue("default", variable, player.getUniqueId()
-                    .toString()));
-        }
+		if (!e.getNPC().equals(npc))
+			return;
+		for (String variable : variables) {
+			endText = endText.replace(variable,
+					BetonQuest.getInstance().getVariableValue("default", variable, player.getUniqueId().toString()));
+		}
 		player.sendMessage(endText);
 		npc.getNavigator().setTarget(loc);
 		npc.getNavigator().setPaused(true);
@@ -94,5 +91,5 @@ public class ShowingHandler implements Listener {
 		}.runTaskLater(BetonQuest.getInstance(), 5 * 20);
 		HandlerList.unregisterAll(this);
 	}
-	
+
 }

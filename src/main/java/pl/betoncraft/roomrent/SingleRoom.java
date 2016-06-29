@@ -55,104 +55,96 @@ public class SingleRoom {
 	 *            location of the room sign
 	 * @throws Exception
 	 */
-	public SingleRoom(RoomRent plugin, World world, String regionName,
-			String signLoc) throws RoomException {
+	public SingleRoom(RoomRent plugin, World world, String regionName, String signLoc) throws RoomException {
 		this.world = world;
 		this.plugin = plugin;
-		region = WorldGuardPlugin.inst().getRegionManager(world)
-				.getRegion(regionName);
+		region = WorldGuardPlugin.inst().getRegionManager(world).getRegion(regionName);
 		if (region == null) {
 			throw new RoomException("Region with given name does not exist!");
 		}
 		sign = getBlock(signLoc, world);
 		FileConfiguration config = plugin.getDB().getConfig();
-		String rawRenter = config.getString(world.getName() + "." + regionName
-				+ ".player");
-		renter = (rawRenter == null) ? null : Bukkit.getOfflinePlayer(
-				UUID.fromString(rawRenter));
-		String rawTime = config.getString(world.getName() + "." + regionName
-				+ ".time");
+		String rawRenter = config.getString(world.getName() + "." + regionName + ".player");
+		renter = (rawRenter == null) ? null : Bukkit.getOfflinePlayer(UUID.fromString(rawRenter));
+		String rawTime = config.getString(world.getName() + "." + regionName + ".time");
 		time = (rawTime == null) ? -1 : Long.parseLong(rawTime);
 	}
-	
+
 	public boolean isFree() {
 		return renter == null && time < 0;
 	}
-	
+
 	/**
 	 * @return the region associated with this room
 	 */
 	public ProtectedRegion getRegion() {
 		return region;
 	}
-	
+
 	/**
 	 * @return this room's sign
 	 */
 	public Sign getSign() {
 		return sign;
 	}
-	
+
 	/**
 	 * @return the player owning the region
 	 */
 	public OfflinePlayer getRenter() {
 		return renter;
 	}
-	
+
 	/**
 	 * Adds a player as the renter of the room.
 	 * 
 	 * @param renter
-	 * 				player to add as the renter
+	 *            player to add as the renter
 	 * @param time
-	 * 				time of the rent
+	 *            time of the rent
 	 */
 	public void addRenter(OfflinePlayer renter, long time) {
 		this.renter = renter;
 		this.time = new Date().getTime() + time;
-		plugin.getDB().getConfig().set(world.getName() + "." + region.getId()
-				+ ".player",
+		plugin.getDB().getConfig().set(world.getName() + "." + region.getId() + ".player",
 				renter.getUniqueId().toString());
-		plugin.getDB().getConfig().set(world.getName() + "." + region.getId()
-				+ ".time", this.time);
+		plugin.getDB().getConfig().set(world.getName() + "." + region.getId() + ".time", this.time);
 		plugin.getDB().save();
 		region.getMembers().getPlayerDomain().addPlayer(renter.getUniqueId());
 		update();
 	}
-	
+
 	/**
 	 * Removes the current renter of the region. Does not update the signs!
 	 */
 	public void removeRenter() {
-		plugin.getDB().getConfig().set(world.getName() + "." + region.getId(),
-				null);
+		plugin.getDB().getConfig().set(world.getName() + "." + region.getId(), null);
 		plugin.getDB().save();
 		region.getMembers().getPlayerDomain().removePlayer(renter.getUniqueId());
 		time = -1;
 		renter = null;
 	}
-	
+
 	/**
 	 * @return time of termination
 	 */
 	public long getTime() {
 		return time;
 	}
-	
+
 	/**
 	 * Adds time of the renting.
 	 * 
-	 * @param time to add
+	 * @param time
+	 *            to add
 	 */
 	public void addTime(long time) {
 		this.time += time;
-		plugin.getDB().getConfig().set(world.getName() + "." + region.getId()
-				+ ".time", this.time);
+		plugin.getDB().getConfig().set(world.getName() + "." + region.getId() + ".time", this.time);
 		plugin.getDB().save();
 		update();
 	}
-	
+
 	/**
 	 * Removes the player if the time has passed and updates the sign.
 	 */
@@ -172,22 +164,21 @@ public class SingleRoom {
 			return;
 		} else {
 			// generate nice string with amount of time
-			long diff = time - current; 
+			long diff = time - current;
 			long day = 1000 * 60 * 60 * 24;
 			long hour = 1000 * 60 * 60;
 			long minute = 1000 * 60;
 			if (diff > day) {
-				text = String.valueOf((diff - (diff%day)) / day) + " "
+				text = String.valueOf((diff - (diff % day)) / day) + " "
 						+ plugin.getConfig().getString("time_messages.day");
 			} else if (diff > hour) {
-				text = String.valueOf((diff - (diff%hour)) / hour) + " "
+				text = String.valueOf((diff - (diff % hour)) / hour) + " "
 						+ plugin.getConfig().getString("time_messages.hour");
 			} else if (diff > minute) {
-				text = String.valueOf((diff - (diff%minute)) / minute) + " "
+				text = String.valueOf((diff - (diff % minute)) / minute) + " "
 						+ plugin.getConfig().getString("time_messages.minute");
 			} else {
-				text = "1 " + plugin.getConfig().getString(
-						"time_messages.minute");
+				text = "1 " + plugin.getConfig().getString("time_messages.minute");
 			}
 		}
 		// set only two lines of the sign, so the rest can be freely modified
@@ -219,8 +210,7 @@ public class SingleRoom {
 			throw new RoomException("Cannot parse coordinates");
 		}
 		Block block = new Location(world, x, y, z).getBlock();
-		if (block != null && block.getType() != Material.SIGN_POST
-				&& block.getType() != Material.WALL_SIGN) {
+		if (block != null && block.getType() != Material.SIGN_POST && block.getType() != Material.WALL_SIGN) {
 			throw new RoomException("The block is not a sign");
 		}
 		return (Sign) block.getState();

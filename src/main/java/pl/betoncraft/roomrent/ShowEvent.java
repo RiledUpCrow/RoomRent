@@ -32,14 +32,13 @@ import pl.betoncraft.betonquest.utils.PlayerConverter;
  * @author Jakub Sapalski
  */
 public class ShowEvent extends QuestEvent {
-	
+
 	private String startText;
 	private String endText;
 	private int npcId;
 	private RoomSet set;
 
-	public ShowEvent(String packName, String instruction)
-			throws InstructionParseException {
+	public ShowEvent(String packName, String instruction) throws InstructionParseException {
 		super(packName, instruction);
 		String[] parts = instruction.split(" ");
 		if (parts.length < 5) {
@@ -47,8 +46,7 @@ public class ShowEvent extends QuestEvent {
 		}
 		set = RoomRent.getPlugin(RoomRent.class).getRoomSets().get(parts[1]);
 		if (set == null) {
-			throw new InstructionParseException(
-					"There is no such set as '" + parts[1] + "'");
+			throw new InstructionParseException("There is no such set as '" + parts[1] + "'");
 		}
 		try {
 			npcId = Integer.parseInt(parts[2]);
@@ -64,10 +62,8 @@ public class ShowEvent extends QuestEvent {
 		final Player player = PlayerConverter.getPlayer(playerID);
 		final Location loc = set.getLocation(player);
 		if (loc == null) {
-			BetonQuest.getInstance().getLogger().warning(
-					"The player " + PlayerConverter.getName(playerID) +
-					" does not have a room rented in '" + set.getName() +
-					"' set");
+			BetonQuest.getInstance().getLogger().warning("The player " + PlayerConverter.getName(playerID)
+					+ " does not have a room rented in '" + set.getName() + "' set");
 			return;
 		}
 		new BukkitRunnable() {

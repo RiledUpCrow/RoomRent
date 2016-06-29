@@ -26,11 +26,10 @@ import pl.betoncraft.betonquest.api.Condition;
  * @author Jakub Sapalski
  */
 public class FreeCondition extends Condition {
-	
+
 	private RoomSet set;
 
-	public FreeCondition(String packName, String instruction)
-			throws InstructionParseException {
+	public FreeCondition(String packName, String instruction) throws InstructionParseException {
 		super(packName, instruction);
 		String[] parts = instruction.split(" ");
 		if (parts.length < 2) {
@@ -38,8 +37,7 @@ public class FreeCondition extends Condition {
 		}
 		set = RoomRent.getPlugin(RoomRent.class).getRoomSets().get(parts[1]);
 		if (set == null) {
-			throw new InstructionParseException(
-					"There is no such set as '" + parts[1] + "'");
+			throw new InstructionParseException("There is no such set as '" + parts[1] + "'");
 		}
 	}
 
