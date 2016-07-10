@@ -105,7 +105,7 @@ public class RoomCommand implements CommandExecutor {
 					if (args.length > 3 && args[3].equalsIgnoreCase("regen")) {
 						try {
 							WorldEditPlugin we = (WorldEditPlugin) Bukkit.getPluginManager().getPlugin("WorldEdit");
-							Vector size = region.getMaximumPoint().subtract(region.getMinimumPoint());
+							Vector size = region.getMaximumPoint().subtract(region.getMinimumPoint()).add(1, 1, 1);
 							CuboidClipboard clipboard = new CuboidClipboard(size, region.getMinimumPoint());
 							EditSession editSession = we.getWorldEdit().getEditSessionFactory().getEditSession(new BukkitWorld(Bukkit.getWorld(world)), 64*64*64);
 							CuboidRegion r = new CuboidRegion(region.getMinimumPoint(), region.getMaximumPoint());
