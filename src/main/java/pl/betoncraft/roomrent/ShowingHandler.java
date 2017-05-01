@@ -19,10 +19,6 @@ package pl.betoncraft.roomrent;
 
 import java.util.ArrayList;
 
-import net.citizensnpcs.api.CitizensAPI;
-import net.citizensnpcs.api.ai.event.NavigationCompleteEvent;
-import net.citizensnpcs.api.npc.NPC;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -31,8 +27,10 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.ai.event.NavigationCompleteEvent;
+import net.citizensnpcs.api.npc.NPC;
 import pl.betoncraft.betonquest.BetonQuest;
-import pl.betoncraft.betonquest.config.Config;
 
 /**
  * Handles showing the room by the NPC.
@@ -49,7 +47,6 @@ public class ShowingHandler implements Listener {
 
 	public ShowingHandler(Player player, Location loc, int npcId, String startText, String endText) {
 		for (String variable : BetonQuest.resolveVariables(startText + endText)) {
-			BetonQuest.createVariable(Config.getPackage("default"), variable);
 			if (!variables.contains(variable))
 				variables.add(variable);
 		}

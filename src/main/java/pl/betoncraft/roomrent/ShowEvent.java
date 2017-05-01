@@ -22,8 +22,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import pl.betoncraft.betonquest.BetonQuest;
+import pl.betoncraft.betonquest.Instruction;
 import pl.betoncraft.betonquest.InstructionParseException;
 import pl.betoncraft.betonquest.api.QuestEvent;
+import pl.betoncraft.betonquest.config.Config;
 import pl.betoncraft.betonquest.utils.PlayerConverter;
 
 /**
@@ -38,23 +40,18 @@ public class ShowEvent extends QuestEvent {
 	private int npcId;
 	private RoomSet set;
 
-	public ShowEvent(String packName, String instruction) throws InstructionParseException {
-		super(packName, instruction);
-		String[] parts = instruction.split(" ");
-		if (parts.length < 5) {
-			throw new InstructionParseException("Not enough arguments");
-		}
-		set = RoomRent.getPlugin(RoomRent.class).getRoomSets().get(parts[1]);
+	public ShowEvent(Instruction instruction) throws InstructionParseException {
+		super(instruction);
+		set = RoomRent.getPlugin(RoomRent.class).getRoomSets().get(instruction.next());
 		if (set == null) {
-			throw new InstructionParseException("There is no such set as '" + parts[1] + "'");
+			throw new InstructionParseException("There is no such set as '" + instruction.current() + "'");
 		}
-		try {
-			npcId = Integer.parseInt(parts[2]);
-		} catch (NumberFormatException e) {
-			throw new InstructionParseException("Could not parse NPC ID");
+		npcId = instruction.getInt();
+		startText = instruction.next().replace('_', ' ').replace('&', '§');
+		endText = instruction.next().replace('_', ' ').replace('&', '§');
+		for (String variable : BetonQuest.resolveVariables(startText + endText)) {
+			BetonQuest.createVariable(Config.getPackages().get("default"), variable);
 		}
-		startText = parts[3].replace('_', ' ').replace('&', '§');
-		endText = parts[4].replace('_', ' ').replace('&', '§');
 	}
 
 	@Override

@@ -17,6 +17,7 @@
  */
 package pl.betoncraft.roomrent;
 
+import pl.betoncraft.betonquest.Instruction;
 import pl.betoncraft.betonquest.InstructionParseException;
 import pl.betoncraft.betonquest.api.Condition;
 import pl.betoncraft.betonquest.utils.PlayerConverter;
@@ -30,15 +31,11 @@ public class RoomCondition extends Condition {
 
 	private RoomSet set;
 
-	public RoomCondition(String packName, String instruction) throws InstructionParseException {
-		super(packName, instruction);
-		String[] parts = instruction.split(" ");
-		if (parts.length < 2) {
-			throw new InstructionParseException("Not enough arguments");
-		}
-		set = RoomRent.getPlugin(RoomRent.class).getRoomSets().get(parts[1]);
+	public RoomCondition(Instruction instruction) throws InstructionParseException {
+		super(instruction);
+		set = RoomRent.getPlugin(RoomRent.class).getRoomSets().get(instruction.next());
 		if (set == null) {
-			throw new InstructionParseException("There is no such set as '" + parts[1] + "'");
+			throw new InstructionParseException("There is no such set as '" + instruction.current() + "'");
 		}
 	}
 

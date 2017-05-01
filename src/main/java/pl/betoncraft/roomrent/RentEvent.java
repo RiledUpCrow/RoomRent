@@ -17,6 +17,7 @@
  */
 package pl.betoncraft.roomrent;
 
+import pl.betoncraft.betonquest.Instruction;
 import pl.betoncraft.betonquest.InstructionParseException;
 import pl.betoncraft.betonquest.api.QuestEvent;
 import pl.betoncraft.betonquest.utils.PlayerConverter;
@@ -31,20 +32,15 @@ public class RentEvent extends QuestEvent {
 	private RoomSet set;
 	private long time;
 
-	public RentEvent(String packName, String instruction) throws InstructionParseException {
-		super(packName, instruction);
-		String[] parts = instruction.split(" ");
-		if (parts.length < 3) {
-			throw new InstructionParseException("Not enough arguments");
-		}
-		set = RoomRent.getPlugin(RoomRent.class).getRoomSets().get(parts[1]);
+	public RentEvent(Instruction instruction) throws InstructionParseException {
+		super(instruction);
+		set = RoomRent.getPlugin(RoomRent.class).getRoomSets().get(instruction.next());
 		if (set == null) {
-			throw new InstructionParseException("There is no such set as '" + parts[1] + "'");
+			throw new InstructionParseException("There is no such set as '" + instruction.current() + "'");
 		}
-		try {
-			time = Long.parseLong(parts[2]) * 1000 * 60;
-		} catch (NumberFormatException e) {
-			throw new InstructionParseException("Could not parse time");
+		time = instruction.getLong() * 1000 * 60;
+		if (time < 0) {
+			throw new InstructionParseException("Time cannot be negative!");
 		}
 	}
 

@@ -21,6 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import pl.betoncraft.betonquest.BetonQuest;
+import pl.betoncraft.betonquest.Instruction;
 import pl.betoncraft.betonquest.InstructionParseException;
 import pl.betoncraft.betonquest.api.Variable;
 import pl.betoncraft.betonquest.config.Config;
@@ -37,18 +38,14 @@ public class RoomVariable extends Variable {
 	private Type type;
 	private RoomRent plugin;
 
-	public RoomVariable(String packName, String instruction) throws InstructionParseException {
-		super(packName, instruction);
-		String[] parts = instruction.replace("%", "").split("\\.");
-		if (parts.length != 3) {
-			throw new InstructionParseException("Incorrect number of arguments");
-		}
+	public RoomVariable(Instruction instruction) throws InstructionParseException {
+		super(instruction);
 		plugin = RoomRent.getPlugin(RoomRent.class);
-		set = plugin.getRoomSets().get(parts[1]);
+		set = plugin.getRoomSets().get(instruction.next());
 		if (set == null) {
-			throw new InstructionParseException("There is no such set as '" + parts[1] + "'");
+			throw new InstructionParseException("There is no such set as '" + instruction.current() + "'");
 		}
-		switch (parts[2].toLowerCase()) {
+		switch (instruction.next().toLowerCase()) {
 		case "total":
 			type = Type.TOTAL_ROOMS;
 			break;
@@ -64,6 +61,8 @@ public class RoomVariable extends Variable {
 		case "date":
 			type = Type.ENDING_DATE;
 			break;
+		default:
+			throw new InstructionParseException("Unknown keyword: '" + instruction.current() + "'");
 		}
 	}
 
@@ -89,7 +88,7 @@ public class RoomVariable extends Variable {
 			}
 			return Integer.toString(full);
 		case TIME_LEFT:
-			String lang = BetonQuest.getInstance().getDBHandler(playerID).getLanguage();
+			String lang = BetonQuest.getInstance().getPlayerData(playerID).getLanguage();
 			String daysWord = Config.getMessage(lang, "days");
 			String hoursWord = Config.getMessage(lang, "hours");
 			String minutesWord = Config.getMessage(lang, "minutes");
